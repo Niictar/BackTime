@@ -51,3 +51,30 @@ def add_firefox_history(history_file)
     end
   end
 end
+
+# Adds a Chrome history file to the database's time records.
+#
+# Like the Firefox import above, this type of add will set the
+# created, access, and modified times to the visit time for each item
+# in history.
+#
+# The Chrome history file called "History" is likely in the profile
+# folder of your Chrome root. (So, often "Default/History")
+def add_chrome_history(history_file)
+  SQLite3::Database.new history_file do |db|
+    db.execute "SELECT * FROM visits" do |history_entry|
+      place = db.execute("SELECT * FROM urls where id = ?", history_entry[1]).first
+      visit_time = Time.at(history_entry[3] / 1000000)
+
+      TimeEntry.create(
+        :name => place[2],
+        :path => place[1],
+        :type => "Google Chrome History",
+        :created => visit_time,
+        :modified => visit_time,
+        :accessed => visit_time,
+        :recorded => Time.now
+      ).save
+    end
+  end
+end
