@@ -47,7 +47,7 @@ def add_firefox_history(history_file)
         :modified => visit_time,
         :accessed => visit_time,
         :recorded => Time.now
-      ).save
+      ).save unless place.nil?
     end
   end
 end
@@ -74,7 +74,7 @@ def add_chrome_history(history_file)
         :modified => visit_time,
         :accessed => visit_time,
         :recorded => Time.now
-      ).save
+      ).save unless place.nil?
     end
   end
 end
