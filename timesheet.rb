@@ -64,7 +64,8 @@ def add_chrome_history(history_file)
   SQLite3::Database.new history_file do |db|
     db.execute "SELECT * FROM visits" do |history_entry|
       place = db.execute("SELECT * FROM urls where id = ?", history_entry[1]).first
-      visit_time = Time.at(history_entry[2] / 10000000)
+      # Time is number of 100 msecs from January 1, 1601.
+      visit_time = (Time.new(1601, 1, 1) + history_entry[2] / 1000000)
 
       TimeEntry.create(
         :name => place[2],
