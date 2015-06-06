@@ -47,7 +47,7 @@ def add_firefox_history(history_file)
         :modified => visit_time,
         :accessed => visit_time,
         :recorded => Time.now
-      ).save unless place.nil?
+      ).save! unless place.nil?
     end
   end
 end
@@ -64,7 +64,7 @@ def add_chrome_history(history_file)
   SQLite3::Database.new history_file do |db|
     db.execute "SELECT * FROM visits" do |history_entry|
       place = db.execute("SELECT * FROM urls where id = ?", history_entry[1]).first
-      visit_time = Time.at(history_entry[3] / 1000000)
+      visit_time = Time.at(history_entry[2] / 10000000)
 
       TimeEntry.create(
         :name => place[2],
@@ -74,7 +74,7 @@ def add_chrome_history(history_file)
         :modified => visit_time,
         :accessed => visit_time,
         :recorded => Time.now
-      ).save unless place.nil?
+      ).save! unless place.nil?
     end
   end
 end
