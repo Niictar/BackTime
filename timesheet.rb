@@ -40,7 +40,7 @@ def add_firefox_history(history_file)
       visit_time = Time.at(history_entry[3] / 1000000)
 
       TimeEntry.create(
-        :name => place[3],
+        :name => place[2],
         :path => place[1],
         :type => "Firefox History",
         :created => visit_time,
