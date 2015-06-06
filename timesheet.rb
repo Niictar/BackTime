@@ -18,3 +18,8 @@ def add_folder(path = Dir.home)
     ).save
   end
 end
+
+# Super-dangerous... Resets the database back to nothingness!
+def reset_database
+  DataMapper.auto_migrate!
+end
