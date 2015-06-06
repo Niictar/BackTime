@@ -9,6 +9,7 @@ class TimeEntry
 
   property :id, Serial
   property :name, String
+  property :path, String
   property :type, String
   property :created, DateTime
   property :modified, DateTime

@@ -10,6 +10,7 @@ def add_folder(path = Dir.home)
 
     TimeEntry.create(
       :name => File.absolute_path(filename),
+      :path => File.basename(filename),
       :type => "File",
       :created => stat.ctime,
       :modified => stat.mtime,
