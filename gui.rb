@@ -6,7 +6,9 @@ class Gui
 
   def initialize
     @root_window = TkRoot.new.withdraw
-    ConfigWindow.new @root_window
+    ConfigWindow.new @root_window do |database_file|
+      puts database_file
+    end
     Tk.mainloop
   end
 end

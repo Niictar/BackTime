@@ -1,4 +1,6 @@
 class ConfigWindow
+  attr_accessor :database_file
+
   def initialize(root_window)
     top = TkToplevel.new(root_window) do
       resizable false, false
@@ -45,7 +47,9 @@ class ConfigWindow
       width 7
       pack :side => "right", :padx => 5
       command do
+        value = database.value
         top.destroy
+        yield value
       end
     end
 
@@ -53,7 +57,7 @@ class ConfigWindow
       text "Cancel"
       width 7
       pack :side => "right"
-      command {top.destroy}
+      command {exit}
     end
   end
 end
