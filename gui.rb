@@ -1,14 +1,17 @@
 require 'tk'
 require_relative 'gui/configWindow'
+require_relative 'gui/mainWindow'
+require_relative 'timesheet'
 
 class Gui
   attr_reader :root_window
 
-  def initialize
+  def initialize(log = false)
     @root_window = TkRoot.new.withdraw
     ConfigWindow.new @root_window do |database_file|
-      puts database_file
+      MainWindow.new @root_window, TimeSheet.new(database_file, log)
     end
+
     Tk.mainloop
   end
 end
