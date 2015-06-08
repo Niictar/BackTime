@@ -48,7 +48,7 @@ class ConfigWindow
       pack :side => "right", :padx => 5
       command do
         value = database.value
-        top.destroy
+        top.withdraw
         yield value
       end
     end
