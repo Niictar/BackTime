@@ -1,5 +1,6 @@
 require 'data_mapper'
 require 'sqlite3'
+require 'nokogiri'
 
 # A TimeSheet class that encapsulates the logic of reading in time
 # data of vrious types and storing it into a database.
@@ -111,6 +112,23 @@ class TimeSheet
           :recorded => Time.now
         ).save! unless place.nil?
       end
+    end
+  end
+
+  # Adds an Internet Explorer History Viewer XML file to the database
+  def add_iehv_xml(xml_file)
+    Nokogiri::XML(File.open(xml_file)).css("visited_links_list item").each do |entry|
+      visit_time = Date.strptime entry.css('modified_date').inner_text, "%m/%d/%Y %r"
+
+      TimeEntry.create(
+        :name => entry.css('title').inner_text,
+        :path => entry.css('url').inner_text,
+        :type => "Internet Explorer History Viewer Entry",
+        :created => visit_time,
+        :modified => visit_time,
+        :accessed => visit_time,
+        :recorded => Time.now
+      ).save!
     end
   end
 end
