@@ -131,4 +131,9 @@ class TimeSheet
       ).save!
     end
   end
+
+  # Returns all Time entries from the database.
+  def all
+    TimeEntry.all :order => [:created.asc]
+  end
 end
