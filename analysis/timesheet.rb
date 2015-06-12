@@ -25,8 +25,8 @@ class TimeSheet
   # The constructor Accepts a path to a database file to play with, as
   # well as a boolean argument about whether or not we should output
   # the SQL this class runs to the console.
-  def initialize(database_file, debug = false)
-    DataMapper::Logger.new $stdout, :debug if debug
+  def initialize(database_file)
+    DataMapper::Logger.new $stdout, :debug if BackTime.config['verbose']
     DataMapper.setup :default, (@database_url = "sqlite:#{database_file}")
     DataMapper.finalize
     create_database
