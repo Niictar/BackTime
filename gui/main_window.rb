@@ -11,25 +11,14 @@ class MainWindow
       title "Time Analyzer"
     end
 
-    if (config = BackTime.config)
-      database = config['database']
-    else
-      BackTime.config = {}
-    end
+    config_window = ConfigWindow.new @root_window
+    database = BackTime.config['database']
 
     if database.nil?
       @root_window.withdraw
-      ConfigWindow.new @root_window do |database_file|
-        @timesheet = TimeSheet.new database_file, BackTime.config['log']
-
-        BackTime.config['database'] = database_file
-        BackTime.persist_config
-
-        @root_window.deiconify
-      end
-    else
-      @timesheet = TimeSheet.new database
+      config_window.show
     end
+
 
     gui @root_window
   end

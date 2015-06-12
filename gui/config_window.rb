@@ -1,6 +1,4 @@
 class ConfigWindow
-  attr_accessor :database_file
-
   # ConfigWindow constructor.
   #
   # This constructor accepts a single argument: The root window it
@@ -9,12 +7,12 @@ class ConfigWindow
   # This constructor also accepts a block: The code that should
   # execute when the user has selected a file they wish to use.
   def initialize(root_window)
-    top = TkToplevel.new(root_window) do
+    @top = top = TkToplevel.new(root_window) do
       resizable false, false
       title "Retrospective Timesheet setup"
-    end
+    end.withdraw
 
-    selection = TkFrame.new(top) do
+    selection = TkFrame.new(@top) do
       grid :row => 0, :column => 0
     end
 
@@ -30,6 +28,8 @@ class ConfigWindow
       height 1
       grid :row => 0, :column => 1
     end
+
+    database.value = BackTime.config['database']
 
     TkButton.new(selection) do
       text "Select"
@@ -54,9 +54,10 @@ class ConfigWindow
       width 7
       pack :side => "right", :padx => 5
       command do
-        value = database.value
+        BackTime.config['database'] = database.value
+        BackTime.persist_config
         top.withdraw
-        yield value
+        root_window.deiconify
       end
     end
 
@@ -69,5 +70,9 @@ class ConfigWindow
         top.withdraw
       end
     end
+  end
+
+  def show
+    @top.deiconify
   end
 end
