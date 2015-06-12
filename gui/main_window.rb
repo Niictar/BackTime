@@ -19,7 +19,6 @@ class MainWindow
       config_window.show
     end
 
-
     gui @root_window
   end
 

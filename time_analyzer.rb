@@ -38,7 +38,7 @@ class TimeAnalyzer
   def time_summary(margin)
     group_by_time(margin).map do |entry|
       time = entry.last.created.to_time - entry.first.created.to_time
-      "#{time.zero? ? 'A few ' : time} minutes starting from #{entry.first.created}"
+      "#{time.zero? ? 'A few ' : time} minutes starting from #{entry.first.created.rfc2822}"
     end
   end
 end
