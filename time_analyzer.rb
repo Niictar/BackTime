@@ -14,9 +14,14 @@ class TimeAnalyzer
   # seconds close to each other.
   #
   # Default margin is an hour
+  #
+  # On top of that, if a block is provided, the TimeSheet is passed to
+  # it, and whatever the return value of the block is the value that
+  # will be processed. That means you can perform filtering at this
+  # level too.
   def group_by_time(margin = (60 * 60))
     groups = []
-    all = @timesheet.all
+    all = block_given? ? @timesheet.all : yield(@timesheet)
     current = [all.first]
 
     all.inject do |head, tail|
