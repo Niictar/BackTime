@@ -6,13 +6,9 @@ require_relative "time_analyzer"
 
 module BackTime extend self
   attr_reader :config
-  @config_file = "config.yaml"
 
-  @config = if File.exists? @config_file
-              YAML.load_file(@config_file) or {}
-            else
-              {}
-            end
+  @config_file = "config.yaml"
+  @config = File.exists? @config_file ? (YAML.load_file(@config_file) or {}) : {}
 
   # Persists the current configuration to the current configuration
   # file.
