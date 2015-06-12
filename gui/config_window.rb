@@ -1,6 +1,13 @@
 class ConfigWindow
   attr_accessor :database_file
 
+  # ConfigWindow constructor.
+  #
+  # This constructor accepts a single argument: The root window it
+  # should be attached to.
+  #
+  # This constructor also accepts a block: The code that should
+  # execute when the user has selected a file they wish to use.
   def initialize(root_window)
     top = TkToplevel.new(root_window) do
       resizable false, false
@@ -57,7 +64,10 @@ class ConfigWindow
       text "Cancel"
       width 7
       pack :side => "right"
-      command {exit}
+      command do
+        database.value = ""
+        top.withdraw
+      end
     end
   end
 end

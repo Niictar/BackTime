@@ -6,9 +6,7 @@ class MainWindow
   attr_accessor :timesheet
 
   # Creates the main TK window
-  # Accepts one argument that allows you to start this window hidden
-  # or not. true for hidden, false otherwise. Default is visible.
-  def initialize(log = false)
+  def initialize
     @root_window = TkRoot.new do
       title "Time Analyzer"
     end
@@ -22,7 +20,7 @@ class MainWindow
     if database.nil?
       @root_window.withdraw
       ConfigWindow.new @root_window do |database_file|
-        @timesheet = TimeSheet.new database_file
+        @timesheet = TimeSheet.new database_file, BackTime.config['log']
 
         BackTime.config['database'] = database_file
         BackTime.persist_config
@@ -36,11 +34,15 @@ class MainWindow
     gui @root_window
   end
 
+  # Starts the GUI
+  # Seperate from the constructor in case you wish to do something
+  # with this class first.
   def start
     Tk.mainloop
   end
 
   private
+  # The Main GUI layout code.
   def gui(root)
     Tk::Tile::Frame.new(root) do
       padding "3 3 12 12"
