@@ -1,6 +1,7 @@
 require 'data_mapper'
 require 'sqlite3'
 require 'nokogiri'
+require 'csv'
 
 # A TimeSheet class that encapsulates the logic of reading in time
 # data of vrious types and storing it into a database.
@@ -135,5 +136,22 @@ class TimeSheet
   # Returns all Time entries from the database.
   def all
     TimeEntry.all :order => [:created.asc]
+  end
+
+  # Converts this TimeSheet into a CSV string. (Often REALLY BIG)
+  def to_csv
+    CSV.generate do |csv|
+      all.each do |entry|
+        csv << [
+          entry.name,
+          entry.path,
+          entry.type,
+          entry.created,
+          entry.modified,
+          entry.accessed,
+          entry.recorded
+        ]
+      end
+    end
   end
 end
