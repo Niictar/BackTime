@@ -35,7 +35,9 @@ class TimeAnalyzer
 
   # Takes a number of seconds and creates a summary of the contiguous
   # time showing the starting time and date, as well as the duration.
-  def time_summary(margin)
+  # Default if no argument is provided is to use 60 minutes as a
+  # margin.
+  def time_summary(margin = (60 * 60))
     group_by_time(margin).map do |entry|
       time = entry.last.created.to_time - entry.first.created.to_time
       "#{time.zero? ? 'A few ' : time} minutes starting from #{entry.first.created.rfc2822}"
