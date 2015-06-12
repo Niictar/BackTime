@@ -118,7 +118,7 @@ class TimeSheet
   # Adds an Internet Explorer History Viewer XML file to the database
   def add_iehv_xml(xml_file)
     Nokogiri::XML(File.open(xml_file)).css("visited_links_list item").each do |entry|
-      visit_time = Date.strptime entry.css('modified_date').inner_text, "%m/%d/%Y %r"
+      visit_time = DateTime.strptime entry.css('modified_date').inner_text, "%m/%d/%Y %I:%M:%S %p"
 
       TimeEntry.create(
         :name => entry.css('title').inner_text,
