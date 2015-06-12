@@ -5,7 +5,7 @@ class TimeAnalyzer
   # passed in TimeSheet will be the basis for all of the analysis that
   # the returned object can perform.
   def initialize(timesheet)
-    raise "Expected TimeSheet, got #{}" unless timesheet.class == TimeSheet
+    raise "Expected TimeSheet, got #{timesheet.class}" unless timesheet.class == TimeSheet
     @timesheet = timesheet
   end
 
@@ -24,12 +24,21 @@ class TimeAnalyzer
         current.push tail
       else
         groups.push current
-        current = []
+        current = [tail]
       end
 
       tail
     end
 
     groups.push current
+  end
+
+  # Takes a number of seconds and creates a summary of the contiguous
+  # time showing the starting time and date, as well as the duration.
+  def time_summary(margin)
+    group_by_time(margin).map do |entry|
+      time = entry.last.created.to_time - entry.first.created.to_time
+      "#{time.zero? ? 'A few ' : time} minutes starting from #{entry.first.created}"
+    end
   end
 end
