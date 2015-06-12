@@ -1,4 +1,4 @@
-require_relative 'gui/main_window'
+require_relative 'main_window'
 
 class Gui
   attr_accessor :log

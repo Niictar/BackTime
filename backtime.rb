@@ -1,14 +1,14 @@
 #!/usr/bin/ruby
 require "yaml"
-require_relative "gui"
-require_relative "timesheet"
-require_relative "time_analyzer"
+require_relative "gui/gui"
+require_relative "analysis/timesheet"
+require_relative "analysis/time_analyzer"
 
 module BackTime extend self
   attr_reader :config
 
   @config_file = "config.yaml"
-  @config = File.exists? @config_file ? (YAML.load_file(@config_file) or {}) : {}
+  @config = File.exists?(@config_file) ? (YAML.load_file(@config_file) or {}) : {}
 
   # Persists the current configuration to the current configuration
   # file.
