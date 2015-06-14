@@ -43,9 +43,14 @@ class TimeAnalyzer
   # Default if no argument is provided is to use 60 minutes as a
   # margin.
   def time_summary(margin = (60 * 60))
-    group_by_time(margin).map do |entry|
-      time = (entry.first.created.to_time - entry.last.created.to_time) / 60
-      "#{time.zero? ? 'A few ' : time.abs.round} minutes starting from #{entry.first.created.rfc2822}"
+    grouped = group_by_time(margin)
+    if grouped.first.first.nil?
+      ["There are no entires to summarize! Try to import some data first."]
+    else
+      grouped.map do |entry|
+        time = (entry.first.created.to_time - entry.last.created.to_time) / 60
+        "#{time.zero? ? 'A few ' : time.abs.round} minutes starting from #{entry.first.created.rfc2822}"
+      end
     end
   end
 end
