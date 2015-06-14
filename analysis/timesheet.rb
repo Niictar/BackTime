@@ -14,7 +14,15 @@ class TimeSheet
     # TimeEntry constructor, accepts a number of key arguments to
     # populate the resulting TimeEntry's fields.
     #
-    # Accepted
+    # Accepted arguments include:
+    # :id => The ID of the TimeEntry in the database.
+    # :name => The name of the place visited.
+    # :path => The path or address of the place visited.
+    # :type => The type of history this is.
+    # :created => The time the entry was created.
+    # :modified => The last time the entry was modified.
+    # :accessed => The last time the entry was accessed.
+    # :recorded => The time the entry was recorded into the database.
     def initialize(values = {})
       @id = values[:id]
       @name = values[:name]
@@ -23,13 +31,18 @@ class TimeSheet
       @created = values[:created]
       @modified = values[:modified]
       @accessed = values[:accessed]
-      @recorded = values[:recorded]
+      @recorded = values[:recorded] || Time.now
     end
 
+    # Converts this object into an array.
     def to_a
       [id, name, path, type, created, modified, accessed, recorded]
     end
 
+    # Creates any number of TimeEntries from the an SQLite ResultSet
+    #
+    # This method will convert the three date columns (created,
+    # accessed, modified, and recorded) into DateTime objects.
     def self.from_resultset(rs)
       rs.map do |row|
         new :id => row[0],
@@ -66,7 +79,7 @@ class TimeSheet
         "accessed" TIMESTAMP,
         "recorded" TIMESTAMP
       )
-      SQL
+    SQL
   end
 
   # Super-dangerous... Resets the database back to nothingness!
