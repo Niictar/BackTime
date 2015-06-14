@@ -68,11 +68,11 @@ last = ARGV.inject do |first, second|
   end
 end
 
-puts help and exit if args == {} or args['-h']
-
 # ...that means, we assign it to true, but only if it is not nil.
 args[last] = true unless last.nil?
 BackTime.args = args
+
+puts help and exit if args == {} or args['-h']
 
 # Super-procedural and super-simple argument handling!
 timesheet = TimeSheet.new BackTime.config['database']
