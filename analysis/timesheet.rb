@@ -242,7 +242,7 @@ class TimeSheet
   # into the database simultaneously.
   def add_entries(time_entries)
     until time_entries.empty?
-      transaction = time_entries.shift 500
+      transaction = time_entries.shift 142
 
       statement = @db.prepare <<-SQL
         INSERT INTO "#{@table}"
