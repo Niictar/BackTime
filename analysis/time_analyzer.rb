@@ -21,7 +21,7 @@ class TimeAnalyzer
   # level too.
   def group_by_time(margin = (60 * 60))
     groups = []
-    all = block_given? ? yield(@timesheet) : @timesheet.all
+    all = block_given? ? yield(@timesheet) : @timesheet.all.select {|entry| not entry.created.nil?}
     current = [all.first]
 
     all.inject do |head, tail|

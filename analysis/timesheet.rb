@@ -39,6 +39,15 @@ class TimeSheet
       [id, name, path, type, created, modified, accessed, recorded]
     end
 
+    private
+    def self.get_date(date)
+      begin
+        DateTime.parse date
+      rescue
+        nil
+      end
+    end
+
     # Creates any number of TimeEntries from the an SQLite ResultSet
     #
     # This method will convert the three date columns (created,
@@ -49,10 +58,10 @@ class TimeSheet
             :name => row[1],
             :path => row[2],
             :type => row[3],
-            :created => DateTime.parse(row[4]),
-            :modified => DateTime.parse(row[5]),
-            :accessed => DateTime.parse(row[6]),
-            :recorded => DateTime.parse(row[7])
+            :created => get_date(row[4]),
+            :modified => get_date(row[5]),
+            :accessed => get_date(row[6]),
+            :recorded => get_date(row[7])
       end
     end
   end
@@ -178,7 +187,11 @@ class TimeSheet
     history = []
 
     Nokogiri::XML(File.open(xml_file)).css("visited_links_list item").each do |entry|
-      visit_time = DateTime.strptime entry.css('modified_date').inner_text, "%m/%d/%Y %I:%M:%S %p"
+      begin
+        visit_time = DateTime.strptime entry.css('modified_date').inner_text, "%m/%d/%Y %I:%M:%S %p"
+      rescue
+        visit_time = nil
+      end
       history << TimeEntry.new(
         :name => entry.css('title').inner_text,
         :path => entry.css('url').inner_text,
