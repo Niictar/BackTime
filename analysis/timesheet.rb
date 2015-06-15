@@ -253,7 +253,7 @@ class TimeSheet
 
       statement.execute(
         *transaction.inject([]) do |acc, item|
-          acc + item.to_a[1..-1].map {|column| column.to_s}
+          acc + item.to_a[1..-1].map {|column| column.class == Time ? column.iso8601 : column.to_s}
         end)
     end
   end
