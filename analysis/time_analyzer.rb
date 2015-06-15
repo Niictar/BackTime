@@ -48,8 +48,8 @@ class TimeAnalyzer
       ["There are no entires to summarize! Try to import some data first."]
     else
       grouped.map do |entry|
-        time = (entry.first.created.to_time - entry.last.created.to_time) / 60
-        "#{time.zero? ? 'A few ' : time.abs.round} minutes starting from #{entry.first.created.rfc2822}"
+        time = ((entry.first.created.to_time - entry.last.created.to_time) / 60).abs.round
+        "#{time.zero? ? 'A few ' : time} minutes starting from #{entry.first.created.rfc2822}"
       end
     end
   end
