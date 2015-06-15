@@ -49,7 +49,7 @@ class TimeAnalyzer
     else
       grouped.map do |entry|
         time = ((entry.first.created.to_time - entry.last.created.to_time) / 60).abs.round
-        "#{time.zero? ? 'A few ' : time} minutes starting from #{entry.first.created.rfc2822}"
+        "#{time.zero? ? 'A few ' : time} minute#{time == 1 ? '' : 's'} starting from #{entry.first.created.rfc2822}"
       end
     end
   end
