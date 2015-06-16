@@ -212,7 +212,7 @@ class TimeSheet
 
   # Returns all Time entries from the database.
   def all
-    TimeEntry.from_resultset @db.query "SELECT * from '#{@table}' ORDER BY date(created) ASC"
+    TimeEntry.from_resultset @db.query "SELECT * from '#{@table}' ORDER BY datetime(created) ASC"
   end
 
   # Converts this TimeSheet into a CSV string. (Often REALLY BIG)
