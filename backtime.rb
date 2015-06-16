@@ -18,10 +18,10 @@ module BackTime extend self
 
   def args=(args)
     @args = args
-    @config_file = (args['-config'] or "config.yaml")
+    @config_file = (args['-config'] or ["config.yaml"]).last
     @config = File.exists?(@config_file) ? (YAML.load_file(@config_file) or {}) : {}
-    @config['database'] = args['-database'] unless args['-database'].nil?
-    @config['verbose'] = args['-v'] unless args['-v'].nil?
+    @config['database'] = args['-database'].last unless args['-database'].nil?
+    @config['verbose'] = args['-v'].last unless args['-v'].nil?
   end
 end
 
@@ -60,10 +60,11 @@ last = ARGV.inject do |first, second|
   if first.nil?
     second
   elsif first[0] == "-" and second[0] != "-"
-    args[first] = second
+    args[first] = [] if args[first].nil?
+    args[first] << second
     nil
   else
-    args[first] = true
+    args[first] = [true]
     second
   end
 end
@@ -77,25 +78,25 @@ puts help and exit if args == {} or args['-h']
 # Super-procedural and super-simple argument handling!
 timesheet = TimeSheet.new BackTime.config['database']
 
-if args['-ff']
-  puts "Importing Firefox database: #{args['-ff']}"
-  timesheet.add_firefox_history args['-ff']
-end
+args['-ff'].each do |file|
+  puts "Importing Firefox database: #{file}"
+  timesheet.add_firefox_history file
+end if args['-ff']
 
-if args['-chrome']
-  puts "Importing Chrome database: #{args['-chrome']}"
-  timesheet.add_chrome_history args['-chrome']
-end
+args['-chrome'].each do |file|
+  puts "Importing Chrome database: #{file}"
+  timesheet.add_chrome_history file
+end if args['-chrome']
 
-if args['-iehv']
-  puts "Importing Internet Explorer History Viewer XML: #{args['-iehv']}"
-  timesheet.add_iehv_xml args['-iehv']
-end
+args['-iehv'].each do |file|
+  puts "Importing Internet Explorer History Viewer XML: #{file}"
+  timesheet.add_iehv_xml file
+end if args['-iehv']
 
-if args['-file']
-  puts "Importing filesystem file times from #{args['-file']}"
-  timesheet.add_folder args['-file']
-end
+args['-file'].each do |path|
+  puts "Importing filesystem file times from #{path}"
+  timesheet.add_folder path
+end if args['-file']
 
 puts timesheet.to_csv and exit if args['-csv']
 
