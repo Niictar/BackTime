@@ -46,7 +46,10 @@ Importing arguments:
 Output options:
    -csv             Output the current database as a CSV
    -summary         Output a summary of contiguous time based on the
-                    information in the database.
+                    information in the database. Can be combined with
+                    -csv to describe the contents of each line of the
+                    summary and output it all as a giant CSV string that
+                    can be redirected to a file.
 HELP
 
 # Command line argument parsing
@@ -98,9 +101,15 @@ args['-file'].each do |path|
   timesheet.add_folder path
 end if args['-file']
 
-puts timesheet.to_csv and exit if args['-csv']
-
+# Output summary options
 analyzer = TimeAnalyzer.new timesheet
-puts analyzer.time_summary and exit if args['-summary']
+
+if args['-summary'] and args['-csv']
+  puts analyzer.time_summary_csv
+  exit
+end
+
+puts timesheet.to_csv and exit if args['-csv']
+puts analyzer.time_summary_simple and exit if args['-summary']
 
 Gui.new.start_graphical if args['-gui']

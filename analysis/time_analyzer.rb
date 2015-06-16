@@ -1,3 +1,4 @@
+require 'csv'
 require_relative "timesheet"
 
 class TimeAnalyzer
@@ -42,16 +43,44 @@ class TimeAnalyzer
   # time showing the starting time and date, as well as the duration.
   # Default if no argument is provided is to use 60 minutes as a
   # margin.
-  def time_summary(margin = (60 * 60))
+  def time_summary_simple(margin = (60 * 60))
     grouped = group_by_time(margin)
     if grouped.first.first.nil?
       ["There are no entires to summarize! Try to import some data first."]
     else
       grouped.map do |entry|
-        time = ((entry.first.created.to_time - entry.last.created.to_time) / 60).abs.round
-        formatted = entry.first.created.strftime '%A, %d %b %Y at %I:%M%p'
-        "#{time.zero? ? 'A few' : time} minute#{time == 1 ? '' : 's'} starting from #{formatted}"
+        entry_summary entry
       end
     end
+  end
+
+  # Takes a margin and then using it, generates CSV that describes the
+  # summary you would get from from time_summary_simple function with
+  # that margin. (Which, in turn, groups all TimeEntries from the
+  # database within the window of time of each other to create the
+  # summary entires.)
+  #
+  # Inside the resulting CSV, the first column contains the summay
+  # entries, and the rows following are describing the TimeEntries
+  # that make up the summary.
+  def time_summary_csv(margin = (60 * 60))
+    grouped = group_by_time(margin)
+    CSV.generate do |csv|
+      grouped.each do |entry|
+        csv << [entry_summary(entry)]
+        entry.each do |row|
+          csv << ([""] + row.to_a[1..-1])
+        end
+      end
+    end
+  end
+
+  private
+  # Creates a simple string to describe a range of time within a
+  # sorted array of TimeEntries.
+  def entry_summary(entry)
+    time = ((entry.first.created.to_time - entry.last.created.to_time) / 60).abs.round
+    formatted = entry.first.created.strftime '%A, %d %b %Y at %I:%M%p'
+    "#{time.zero? ? 'A few' : time} minute#{time == 1 ? '' : 's'} starting from #{formatted}"
   end
 end
