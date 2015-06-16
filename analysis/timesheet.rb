@@ -104,17 +104,21 @@ class TimeSheet
     files = []
 
     Dir.glob "#{path}/**/*" do |filename|
-      stat = File.stat filename
+      begin
+        stat = File.stat filename
 
-      files << TimeEntry.new(
-        :name => File.absolute_path(filename),
-        :path => File.basename(filename),
-        :type => "File",
-        :created => stat.ctime,
-        :modified => stat.mtime,
-        :accessed => stat.atime,
-        :recorded => Time.now
-      )
+        files << TimeEntry.new(
+          :name => File.absolute_path(filename),
+          :path => File.basename(filename),
+          :type => "File",
+          :created => stat.ctime,
+          :modified => stat.mtime,
+          :accessed => stat.atime,
+          :recorded => Time.now
+        )
+      rescue
+        puts "Warning -- Can't get information for file: #{filename}. Ignoring."
+      end
     end
 
     add_entries files
