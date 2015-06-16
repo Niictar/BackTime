@@ -77,10 +77,25 @@ puts help and exit if args == {} or args['-h']
 # Super-procedural and super-simple argument handling!
 timesheet = TimeSheet.new BackTime.config['database']
 
-timesheet.add_firefox_history args['-ff'] if args['-ff']
-timesheet.add_chrome_history args['-chrome'] if args['-chrome']
-timesheet.add_iehv_xml args['-iehv'] if args['-iehv']
-timesheet.add_folder args['-file'] if args['-file']
+if args['-ff']
+  puts "Importing Firefox database: #{args['-ff']}"
+  timesheet.add_firefox_history args['-ff']
+end
+
+if args['-chrome']
+  puts "Importing Chrome database: #{args['-chrome']}"
+  timesheet.add_chrome_history args['-chrome']
+end
+
+if args['-iehv']
+  puts "Importing Internet Explorer History Viewer XML: #{args['-iehv']}"
+  timesheet.add_iehv_xml args['-iehv']
+end
+
+if args['-file']
+  puts "Importing filesystem file times from #{args['-file']}"
+  timesheet.add_folder args['-file']
+end
 
 puts timesheet.to_csv and exit if args['-csv']
 
