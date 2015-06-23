@@ -46,7 +46,7 @@ class TimeAnalyzer
   def time_summary_simple(margin = (60 * 60))
     grouped = group_by_time(margin)
     if grouped.first.first.nil?
-      ["There are no entires to summarize! Try to import some data first."]
+      ["There are no entries to summarize! Try to import some data first."]
     else
       grouped.map do |entry|
         entry_summary entry
