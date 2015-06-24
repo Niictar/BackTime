@@ -210,6 +210,32 @@ class TimeSheet
     add_entries history
   end
 
+  # Adds an Opera 12 and below history file to the database.
+  #
+  # Opera 12 stored its history in a plaintext file called
+  # "global_history.dat" inside of the root of Opera's profile folder.
+  #
+  # The text file is partitioned into sections of four lines with each
+  # denoting a sepearte field of that history entry.
+  def add_opera_history(history_file)
+    history = []
+
+    IO.readlines(history_file).each_slice(4) do |items|
+      visit_time = Time.at items[2].to_i
+      history << TimeEntry.new(
+        :name => items[0],
+        :path => items[1],
+        :type => "Opera (<= 12) History",
+        :created => visit_time,
+        :modified => visit_time,
+        :accessed => visit_time,
+        :recorded => Time.now
+      )
+    end
+
+    add_entries history
+  end
+
   # Returns all Time entries from the database.
   def all
     TimeEntry.from_resultset @db.query "SELECT * from '#{@table}' ORDER BY datetime(created) ASC"

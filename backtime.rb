@@ -40,6 +40,7 @@ Importing arguments:
     -ff     <file>  Imports a Firefox history database
     -chrome <file>  Imports a Google Chrome history database
     -iehv   <file>  Imports an Internet Explorer History Viewer XML file
+    -o      <file>  Imports an Opera History file.
     -file   <path>  Imports a filesystem path's creation, modification,
                     and access times into the database
 
@@ -90,6 +91,11 @@ args['-chrome'].each do |file|
   puts "Importing Chrome database: #{file}"
   timesheet.add_chrome_history file
 end if args['-chrome']
+
+args['-o'].each do |file|
+  puts "Importing Opera history: #{file}"
+  timesheet.add_opera_history file
+end if args['-o']
 
 args['-iehv'].each do |file|
   puts "Importing Internet Explorer History Viewer XML: #{file}"
