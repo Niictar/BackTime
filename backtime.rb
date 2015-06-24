@@ -41,6 +41,7 @@ Importing arguments:
     -chrome <file>  Imports a Google Chrome history database
     -iehv   <file>  Imports an Internet Explorer History Viewer XML file
     -o      <file>  Imports an Opera History file.
+    -sex    <file>  Imports a SysExporter Email XML file.
     -file   <path>  Imports a filesystem path's creation, modification,
                     and access times into the database
 
@@ -101,6 +102,11 @@ args['-iehv'].each do |file|
   puts "Importing Internet Explorer History Viewer XML: #{file}"
   timesheet.add_iehv_xml file
 end if args['-iehv']
+
+args['-sex'].each do |file|
+  puts "Importing SysExporter E-Mail XML: #{file}"
+  timesheet.add_sysexporter_email_xml file
+end if args['-sex']
 
 args['-file'].each do |path|
   puts "Importing filesystem file times from #{path}"

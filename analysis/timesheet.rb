@@ -210,6 +210,35 @@ class TimeSheet
     add_entries history
   end
 
+  # Imports an SysExporter XML file for Emails into the database.
+  def add_sysexporter_email_xml(xml_file)
+    entries = []
+
+    Nokogiri::XML(File.open(xml_file)).css("exported_items item").each do |item|
+      sent_time = DateTime.strptime item.css('sent').inner_text, "%m/%d/%Y %I:%M %p"
+      begin
+        recieved_time = DateTime.strptime item.css('received').inner_text, "%m/%d/%Y %I:%M %p"
+      rescue
+        recieved_time = nil
+      end
+      to = item.css('to').inner_text
+      from = item.css('from').inner_text
+      folder = item.css('folder').inner_text
+
+      entries << TimeEntry.new(
+        :name => "Email from #{from} to #{to}",
+        :path => "#{from}/#{folder}",
+        :type => "Email",
+        :created => sent_time,
+        :modified => recieved_time,
+        :accessed => recieved_time,
+        :recorded => Time.now
+      )
+    end
+
+    add_entries entries
+  end
+
   # Adds an Opera 12 and below history file to the database.
   #
   # Opera 12 stored its history in a plaintext file called
