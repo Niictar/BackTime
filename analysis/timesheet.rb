@@ -108,8 +108,8 @@ class TimeSheet
         stat = File.stat filename
 
         files << TimeEntry.new(
-          :name => File.absolute_path(filename),
-          :path => File.basename(filename),
+          :name => File.basename(filename),
+          :path => File.absolute_path(filename),
           :type => "File",
           :created => stat.ctime,
           :modified => stat.mtime,
