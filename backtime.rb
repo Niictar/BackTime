@@ -22,7 +22,7 @@ module BackTime extend self
     @config = File.exists?(@config_file) ? (YAML.load_file(@config_file) or {}) : {}
     @config['database'] = args['-database'].last unless args['-database'].nil?
     @config['verbose'] = args['-v'].last unless args['-v'].nil?
-    @config['margin'] = args['-m'].nil? ? 60 : args['-m'].last
+    @config['margin'] = args['-m'].nil? ? 60 : args['-m'].last.to_i
   end
 end
 
@@ -118,7 +118,7 @@ args['-file'].each do |path|
 end if args['-file']
 
 # Output summary options
-analyzer = TimeAnalyzer.new timesheet, @config['margin']
+analyzer = TimeAnalyzer.new timesheet, BackTime.config['margin']
 
 if args['-summary'] and args['-csv']
   puts analyzer.time_summary_csv
