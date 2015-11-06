@@ -22,6 +22,7 @@ module BackTime extend self
     @config = File.exists?(@config_file) ? (YAML.load_file(@config_file) or {}) : {}
     @config['database'] = args['-database'].last unless args['-database'].nil?
     @config['verbose'] = args['-v'].last unless args['-v'].nil?
+    @config['margin'] = args['-m'].nil? ? 60 : args['-m'].last
   end
 end
 
@@ -52,6 +53,9 @@ Output options:
                     -csv to describe the contents of each line of the
                     summary and output it all as a giant CSV string that
                     can be redirected to a file.
+
+Summary options:
+   -m <num>         The number of minutes to use as a margin for summeries.
 HELP
 
 # Command line argument parsing
@@ -114,7 +118,7 @@ args['-file'].each do |path|
 end if args['-file']
 
 # Output summary options
-analyzer = TimeAnalyzer.new timesheet
+analyzer = TimeAnalyzer.new timesheet, @config['margin']
 
 if args['-summary'] and args['-csv']
   puts analyzer.time_summary_csv

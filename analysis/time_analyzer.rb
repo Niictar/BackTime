@@ -5,9 +5,10 @@ class TimeAnalyzer
   # This constructor accepts a TimeSheet, and nothing else... The
   # passed in TimeSheet will be the basis for all of the analysis that
   # the returned object can perform.
-  def initialize(timesheet)
+  def initialize(timesheet, margin)
     raise "Expected TimeSheet, got #{timesheet.class}" unless timesheet.class == TimeSheet
     @timesheet = timesheet
+    @margin = margin
   end
 
   # Takes a number of seconds, and divides the TimeSheet into
@@ -20,7 +21,7 @@ class TimeAnalyzer
   # it, and whatever the return value of the block is the value that
   # will be processed. That means you can perform filtering at this
   # level too.
-  def group_by_time(margin = (60 * 60))
+  def group_by_time(margin = (60 * @margin))
     groups = []
     all = block_given? ? yield(@timesheet) : @timesheet.all.select {|entry| not entry.created.nil?}
     current = [all.first]
@@ -43,7 +44,7 @@ class TimeAnalyzer
   # time showing the starting time and date, as well as the duration.
   # Default if no argument is provided is to use 60 minutes as a
   # margin.
-  def time_summary_simple(margin = (60 * 60))
+  def time_summary_simple(margin = (60 * @margin))
     grouped = group_by_time(margin)
     if grouped.first.first.nil?
       ["There are no entries to summarize! Try to import some data first."]
@@ -63,7 +64,7 @@ class TimeAnalyzer
   # Inside the resulting CSV, the first column contains the summay
   # entries, and the rows following are describing the TimeEntries
   # that make up the summary.
-  def time_summary_csv(margin = (60 * 60))
+  def time_summary_csv(margin = (60 * @margin))
     grouped = group_by_time(margin)
     CSV.generate do |csv|
       grouped.each do |entry|
